@@ -68,14 +68,15 @@ class NewPay
         return $this->merchantid ."-".$hash ."-". $reqid; //this is  "merchantId-SHA256(merchantId-requestId-secret)-requestId"
     }
 
-    public  function gen_json_transaction($orderid,$action,$price,$mail,$phone, $costum1=""){
+    public  function gen_json_transaction($orderid,$action,$price,$mail,$phone, $customvalues=array()){
        $array=array("payment"=>array("orderId"=>$orderid,
                                       "action"=>$action,
                                       "price"=>$price),
                      "customerInfo"=>array("email"=>$mail,
                                            "phone"=>$phone));
-        if (!empty($costum1) && $costum1 !== array(array()))
-            $array["customValues"] = $costum1;
+        $array["payment"] = array("orderId"=>$orderid);
+        $array["payment"] = array("action"=>$orderid);
+            $array["customValues"] = $customvalues;
         $array=json_encode($array);
         return($array);
         }
