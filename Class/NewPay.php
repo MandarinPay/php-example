@@ -68,14 +68,31 @@ class NewPay
         return $this->merchantid ."-".$hash ."-". $reqid; //this is  "merchantId-SHA256(merchantId-requestId-secret)-requestId"
     }
 
-    public function get_auth(){
+    public  function gen_json_transaction($orderid,$action,$price,$mail,$phone, $costum1=""){
+       $array=array("payment"=>array("orderId"=>$orderid,
+                                      "action"=>$action,
+                                      "price"=>$price),
+                     "customerInfo"=>array("email"=>$mail,
+                                           "phone"=>$phone));
+        if (!empty($costum1) && $costum1 !== array(array()))
+            $array["customValues"] = $costum1;
+        $array=json_encode($array);
+        return($array);
+        }
+
+    public function get_auth($json_content){
         $ch=curl_init($this->base_url."/api/transactions");
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $json_content);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            "Content-Type: application/json",
             "X-Auth:".$this->gen_auth(),
         ));
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
         $result = curl_exec($ch);
         if (curl_errno($ch))
             throw new Exception(curl_error($ch));
+        $result=json_decode($result, true);
+        $result=$result["userWebLink"];
         return $result;
     }
 
