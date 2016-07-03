@@ -42,9 +42,9 @@ class NewPay
     public function generate_form($fields)
     {
         $form = "";
-        $fields_copy= $fields->getArrayCopy();
+        $fields_copy=$fields;
         $fields_copy["merchantId"]=$this->merchantid;
-        $sign = $this->calc_sign($this->secret,$fields);
+        $sign = $this->calc_sign($this->secret,$fields_copy);
         $form=$form."<form action=\"{$this->base_url}/Pay\" method=\"POST\"> ";
         foreach($fields_copy as $key => $val)
         {
