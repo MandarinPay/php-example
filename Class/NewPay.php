@@ -6,14 +6,13 @@
  * Time: 12:38
  */
 
-  
+
 
 class NewPay
 {
     public $merchantid;
     public $secret;
     public $base_url;
-    public $fields;
     function __construct($merchantid = "216",
                          $secret= "123321",
                          $base_url = "https://secure.mandarinpay.com"
@@ -43,10 +42,11 @@ class NewPay
     public function generate_form($fields)
     {
         $form = "";
-        $fields["merchantId"]=$this->merchantid;
+        $fields_copy= $fields->getArrayCopy();
+        $fields_copy["merchantId"]=$this->merchantid;
         $sign = $this->calc_sign($this->secret,$fields);
         $form=$form."<form action=\"{$this->base_url}/Pay\" method=\"POST\"> ";
-        foreach($fields as $key => $val)
+        foreach($fields_copy as $key => $val)
         {
             $form = $form . '<input type="hidden" name="'.$key.'" value="' . htmlspecialchars($val) . '"/>'."\n";
         }
