@@ -74,8 +74,6 @@ class NewPay
                                       "price"=>$price),
                      "customerInfo"=>array("email"=>$mail,
                                            "phone"=>$phone));
-        $array["payment"] = array("orderId"=>$orderid);
-        $array["payment"] = array("action"=>$orderid);
             $array["customValues"] = $customvalues;
         $array=json_encode($array);
         return($array);
