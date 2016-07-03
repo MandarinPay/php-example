@@ -16,7 +16,7 @@ class NewPay
     function __construct($merchantid = "216",
                          $secret= "123321",
                          $base_url = "https://secure.mandarinpay.com"
-                         )
+    )
 
     {
         $this->merchantid = $merchantid;
@@ -25,7 +25,7 @@ class NewPay
 
     }
 
-   private function calc_sign($secret,$fields)
+    private function calc_sign($secret,$fields) //sign  need to generate form   Pay
     {
         ksort($fields);
         $secret_t = '';
@@ -39,7 +39,7 @@ class NewPay
     }
 
 
-    public function generate_form($fields)
+    public function generate_form($fields) //generate form  to pay
     {
         $form = "";
         $fields_copy=$fields;
@@ -54,6 +54,29 @@ class NewPay
         $form=$form."<input type=\"submit\" value=\"Оплатить\" />";
         $form=$form."</form>";
         return $form;
+    }
+
+    private function reqid_calc(){    //this is calk reqid this is function need to registr Aut
+        $reqid = time() ."_". microtime(true) ."_". rand();
+        return $reqid;
+    }
+
+    private  function gen_auth()
+    {
+        $reqid = $this->reqid_calc();
+        $hash = hash("sha256", $this->merchantid."-". $reqid ."-". $this->secret);
+        return $this->merchantid ."-".$hash ."-". $reqid; //this is  "merchantId-SHA256(merchantId-requestId-secret)-requestId"
+    }
+
+    public function get_auth(){
+        $ch=curl_init($this->base_url."/api/transactions");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            "X-Auth:".$this->gen_auth(),
+        ));
+        $result = curl_exec($ch);
+        if (curl_errno($ch))
+            throw new Exception(curl_error($ch));
+        return $result;
     }
 
 }

@@ -7,5 +7,6 @@ $form=$new_user->generate_form(array("orderId"=>"328GVD",
     "price"=>"12,34",
     "customer_email"=>"user@mail.ru"
                                         ));
-echo $form;  
+$result=$new_user->get_auth();
+print_r($result);
  
