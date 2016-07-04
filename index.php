@@ -4,7 +4,7 @@ spl_autoload_register(function($class_name){
 });
 $new_user = new NewPay();
 $new_info = new CustomerInfo();
-$orderid=12345;
+$orderid=rand(1,500000000);
 $price=10;
 $action="pay";
 $customer_mail="lox@mail.ru";
@@ -24,7 +24,20 @@ $id_bindings=$card_bindings->id;
 
 
 //know transactions
-$orderid=554;
+$orderid=rand(1,500000000);
 $knowcardnumber="4929509947106878";
 $know_transactions=$new_user->know_transaction($orderid,$price,$costumerinfo,$knowcardnumber);
 $know_transactions_id=$know_transactions->id;
+print_r($know_transactions);
+echo "<br>";
+print_r($know_transactions_id);
+echo "<br>";
+//transaction rebill know card number
+
+
+//rebill
+$orderid=rand(1,5000);
+$rebill="$know_transactions_id";
+$rebill_transactions=$new_user->rebill_transaction($orderid,$price,$rebill);
+print_r($rebill_transactions);
+$rebill_transactions_id=$rebill_transactions->id;
