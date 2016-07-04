@@ -16,7 +16,7 @@ class CustomerInfo
         $this->phone = $phone;
     }
 
-    public function array_all(){
+    public function to_array_costumerinfo(){
         $array["customerInfo"] = array("email"=>$this->email,
                                  "phone"=>$this->phone);
         return($array);
