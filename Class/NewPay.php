@@ -68,19 +68,24 @@ class NewPay
         return $this->merchantid ."-".$hash ."-". $reqid; //this is  "merchantId-SHA256(merchantId-requestId-secret)-requestId"
     }
 
-    public  function gen_json_transaction($orderid,$action,$price,$mail,$phone, $customvalues=array()){
-       $array=array("payment"=>array("orderId"=>$orderid,
-                                      "action"=>$action,
-                                      "price"=>$price),
-                     "customerInfo"=>array("email"=>$mail,
-                                           "phone"=>$phone));
-            $array["customValues"] = $customvalues;
+
+    public function gen_payment($orderid,$action,$price){ //generate  array payment
+        $array["payment"]=array("orderId"=>$orderid,
+            "action"=>$action,
+            "price"=>$price);
+        return $array;
+    }
+
+    public  function gen_json_transaction($payment,$customerinfo, $customvalues=array()){ //generate json_code  transaction
+        $array = array_merge($customerinfo,$payment);
+        $array["customValues"] = $customvalues;
         $array=json_encode($array);
         return($array);
-        }
+    }
 
     public function get_auth($json_content){
-        $ch=curl_init($this->base_url."/api/transactions");
+        $url_transaction=$this->base_url."/api/transactions";
+        $ch=curl_init($url_transaction);
         curl_setopt( $ch, CURLOPT_POSTFIELDS, $json_content);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             "Content-Type: application/json",
