@@ -17,9 +17,7 @@ class NewPay
     //base_url  -  you can choise  url  this is need  a more method !
     function __construct($merchantid = "216",
                          $secret= "123321",
-                         $base_url = array("pay"=>"https://secure.mandarinpay.com/Pay",
-                                           "transactions"=>"https://secure.mandarinpay.com/api/transactions",
-                                           "card-bindings"=>"https://secure.mandarinpay.com/api/card-bindings")
+                         $base_url ="https://secure.mandarinpay.com/"
 
     )
 
@@ -50,7 +48,7 @@ class NewPay
         $fields_copy=$fields;
         $fields_copy["merchantId"]=$this->merchantid;
         $sign = $this->calc_sign($this->secret,$fields_copy);
-        $form=$form."<form action=\"{$this->base_url[0]}\" method=\"POST\"> ";
+        $form=$form."<form action=\"{$this->base_url}.Pay\" method=\"POST\"> ";
         foreach($fields_copy as $key => $val)
         {
             $form = $form . '<input type="hidden" name="'.$key.'" value="' . htmlspecialchars($val) . '"/>'."\n";
@@ -86,10 +84,27 @@ class NewPay
         return($array);
     }
 
-    public function binding_transaction($base_url_choice,$json_content)
+    public function transaction($array_content)
     {
-        $json_content=json_encode($json_content);
-        $url_transaction=$this->base_url[$base_url_choice];
+        $json_content=json_encode($array_content);
+        $url_transaction=$this->base_url."api/transactions";
+        $ch=curl_init($url_transaction);
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $json_content);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            "Content-Type: application/json",
+            "X-Auth:".$this->gen_auth(),
+        ));
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        $result = curl_exec($ch);
+        if (curl_errno($ch))
+            throw new Exception(curl_error($ch));
+        $result=json_decode($result);
+        return $result;
+
+    }  public function binding_card($array_content)
+    {
+        $json_content=json_encode($array_content);
+        $url_transaction=$this->base_url."api/card-bindings";
         $ch=curl_init($url_transaction);
         curl_setopt( $ch, CURLOPT_POSTFIELDS, $json_content);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -107,7 +122,6 @@ class NewPay
     //generate array  to pay transaction on card
     public function gen_array_know_transaction($payment,$customerinfo, $knowcardnumber){
         echo "<br>";
-        print_r($payment);
         $array = array_merge($customerinfo,$payment);
         $array["target"] = array("knownCardNumber"=>$knowcardnumber);
         return($array);
