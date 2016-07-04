@@ -42,14 +42,16 @@ class NewPay
     }
 
 
-    public function generate_form($fields) //generate form  to pay
+    public function generate_form($orderid,$price,$customer_mail) //generate form  to pay
     {
         $form = "";
-        $fields_copy=$fields;
-        $fields_copy["merchantId"]=$this->merchantid;
-        $sign = $this->calc_sign($this->secret,$fields_copy);
+        $array_form_data["orderId"]=$orderid;
+        $array_form_data["price"]=$price;
+        $array_form_data["customer_email"]=$customer_mail;
+        $array_form_data["merchantId"]=$this->merchantid;
+        $sign = $this->calc_sign($this->secret,$array_form_data);
         $form=$form."<form action=\"{$this->base_url}.Pay\" method=\"POST\"> ";
-        foreach($fields_copy as $key => $val)
+        foreach($array_form_data as $key => $val)
         {
             $form = $form . '<input type="hidden" name="'.$key.'" value="' . htmlspecialchars($val) . '"/>'."\n";
         }
@@ -72,20 +74,18 @@ class NewPay
     }
 
 
-    public function gen_payment($orderid,$action,$price){ //generate  array payment
+    private function gen_payment($orderid,$price){ //generate  array payment
         $array["payment"]=array("orderId"=>$orderid,
-            "action"=>$action,
+            "action"=>"pay",
             "price"=>$price);
         return $array;
     }
-    public  function gen_array_transaction($payment,$customerinfo, $customvalues=array()){ //generate json_code  transaction
-        $array = array_merge($customerinfo,$payment);
-        $array["customValues"] = $customvalues;
-        return($array);
-    }
 
-    public function transaction($array_content)
+    public function unknow_transaction($orderid,$price,$costumerinfo,$customvalues=array())
     {
+        $payment=$this->gen_payment($orderid,$price);
+        $array_content = array_merge($costumerinfo,$payment);
+        $array_content["customValues"] = $customvalues;
         $json_content=json_encode($array_content);
         $url_transaction=$this->base_url."api/transactions";
         $ch=curl_init($url_transaction);
@@ -101,10 +101,42 @@ class NewPay
         $result=json_decode($result);
         return $result;
 
-    }  public function binding_card($array_content)
+    }   public function binding_card($array_content)
+{
+
+    $json_content=json_encode($array_content);
+    $url_transaction=$this->base_url."api/card-bindings";
+    $ch=curl_init($url_transaction);
+    curl_setopt( $ch, CURLOPT_POSTFIELDS, $json_content);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        "Content-Type: application/json",
+        "X-Auth:".$this->gen_auth(),
+    ));
+    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+    $result = curl_exec($ch);
+    if (curl_errno($ch))
+        throw new Exception(curl_error($ch));
+    $result=json_decode($result);
+    return $result;
+}
+
+
+    //generate array  to pay transaction on card
+
+    private function gen_array_know_transaction($payment,$customerinfo, $knowcardnumber){
+        echo "<br>";
+        $payment["payment"]["action"] ="payout";
+        $array = array_merge($customerinfo,$payment);
+        $array["target"]["knownCardNumber"] =$knowcardnumber;
+        return($array);
+
+    }
+    public function know_transaction($orderid,$price,$costumerinfo,$knowcardnumber)
     {
-        $json_content=json_encode($array_content);
-        $url_transaction=$this->base_url."api/card-bindings";
+        $payout = $this->gen_payment($orderid,$price);
+        $payout = $this->gen_array_know_transaction($payout,$costumerinfo,$knowcardnumber);
+        $json_content=json_encode($payout);
+        $url_transaction=$this->base_url."api/transactions";
         $ch=curl_init($url_transaction);
         curl_setopt( $ch, CURLOPT_POSTFIELDS, $json_content);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -117,18 +149,10 @@ class NewPay
             throw new Exception(curl_error($ch));
         $result=json_decode($result);
         return $result;
-    }
-
-    //generate array  to pay transaction on card
-    public function gen_array_know_transaction($payment,$customerinfo, $knowcardnumber){
-        echo "<br>";
-        $array = array_merge($customerinfo,$payment);
-        $array["target"] = array("knownCardNumber"=>$knowcardnumber);
-        return($array);
 
     }
 
 
-    
+
 
 }
