@@ -79,7 +79,7 @@ class NewPay
         return $array;
     }
 
-    public function unknow_transaction($orderid, $price, $costumerinfo, $customvalues = array())
+    public function pay_interactive($orderid, $price, $costumerinfo, $customvalues = array())
     {
         $payment = $this->gen_payment($orderid, $price);
         $array_content = array_merge($costumerinfo, $payment);
@@ -101,7 +101,38 @@ class NewPay
 
     }
 
-    public function binding_card($array_content)
+    private function gen_payout($orderid, $price)
+    { //generate  array payout
+        $array["payment"] = array("orderId" => $orderid,
+            "action" => "payout",
+            "price" => $price);
+        return $array;
+    }
+
+    public function payout_interactive($orderid, $price, $costumerinfo, $customvalues = array())
+    {
+        $payment = $this->gen_payout($orderid, $price);
+        $array_content = array_merge($costumerinfo, $payment);
+        $array_content["customValues"] = $customvalues;
+        $json_content = json_encode($array_content);
+        $url_transaction = $this->base_url . "api/transactions";
+        $ch = curl_init($url_transaction);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_content);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            "Content-Type: application/json",
+            "X-Auth:" . $this->gen_auth(),
+        ));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        if (curl_errno($ch))
+            throw new Exception(curl_error($ch));
+        $result = json_decode($result);
+        return $result;
+
+    }
+
+
+    public function new_card_binding($array_content)
     {
 
         $json_content = json_encode($array_content);
@@ -133,7 +164,7 @@ class NewPay
 
     }
 
-    public function know_transaction($orderid, $price, $costumerinfo, $knowcardnumber)
+    public function payout_to_known_card($orderid, $price, $costumerinfo, $knowcardnumber)
     {
         $payout = $this->gen_payment($orderid, $price);
         $payout = $this->gen_array_know_transaction($payout, $costumerinfo, $knowcardnumber);

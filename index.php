@@ -11,13 +11,20 @@ $customer_mail="lox@mail.ru";
 $form=$new_user->generate_form($orderid,$price,$customer_mail);
 $costumerinfo=$new_info->to_array_costumerinfo();
 
-//unknow ransactions
-$payment=$new_user->unknow_transaction($orderid,$price,$costumerinfo);
+//unknow transactions
+$payment=$new_user->pay_interactive($orderid,$price,$costumerinfo);
 $payment_url=$payment->userWebLink;
 //header("Location:{$payment}");
 
+//pauout_interactive
+$payment=$new_user->pay_interactive($orderid,$price,$costumerinfo);
+$payment_url=$payment->userWebLink;
+print_r($payment_url);
+//header("Location:{$payment}");
+
+
 //card_binding
-$card_bindings=$new_user->binding_card($costumerinfo);
+$card_bindings=$new_user->new_card_binding($costumerinfo);
 $card_bindings_link=$card_bindings->userWebLink;
 $id_bindings=$card_bindings->id;
 //header("Location:{$card_bindings_link}");
@@ -26,12 +33,8 @@ $id_bindings=$card_bindings->id;
 //know transactions
 $orderid=rand(1,500000000);
 $knowcardnumber="4929509947106878";
-$know_transactions=$new_user->know_transaction($orderid,$price,$costumerinfo,$knowcardnumber);
+$know_transactions=$new_user->payout_to_known_card($orderid,$price,$costumerinfo,$knowcardnumber);
 $know_transactions_id=$know_transactions->id;
-print_r($know_transactions);
-echo "<br>";
-print_r($know_transactions_id);
-echo "<br>";
 //transaction rebill know card number
 
 
@@ -39,5 +42,4 @@ echo "<br>";
 $orderid=rand(1,5000);
 $rebill="$know_transactions_id";
 $rebill_transactions=$new_user->rebill_transaction($orderid,$price,$rebill);
-print_r($rebill_transactions);
 $rebill_transactions_id=$rebill_transactions->id;
