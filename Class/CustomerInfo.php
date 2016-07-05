@@ -15,11 +15,6 @@ class CustomerInfo
         $this->email = $email;
         $this->phone = $phone;
     }
-
-    public function to_array_costumerinfo(){
-        $array["customerInfo"] = array("email"=>$this->email,
-                                 "phone"=>$this->phone);
-        return($array);
-    }
+    
 
 }
