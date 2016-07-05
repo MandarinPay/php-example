@@ -13,25 +13,22 @@ class NewPay
     public $secret;
     public $base_url;
 
-    //base_url  -  you can choise  url  this is need  a more method !
-    function __construct($custumerinfo,// this is exemplat Class Custumerinfo
-                         $merchantid = "216",
+    function __construct($merchantid = "216",
                          $secret = "123321",
                          $base_url = "https://secure.mandarinpay.com/"
 
     )
 
     {
-        $this->custumerinfo=$custumerinfo;
         $this->merchantid = $merchantid;
         $this->secret = $secret;
         $this->base_url = $base_url;
 
     }
 
-    private function to_array_costumerinfo(){
-        $array["customerInfo"] = array("email"=>$this->custumerinfo->email,
-            "phone"=>$this->custumerinfo->phone);
+    static function to_array_costumerinfo($costumerinfo){
+        $array["customerInfo"] = array("email"=>$costumerinfo->email,
+            "phone"=>$costumerinfo->phone);
         return($array);
     }
 
@@ -88,10 +85,9 @@ class NewPay
         return $array;
     }
 
-    public function pay_interactive($orderid, $price, $customvalues = array())
+    public function pay_interactive($orderid, $price,$costumerinfo, $customvalues = array())
     {
         $payment = $this->gen_payment($orderid, $price);
-        $costumerinfo=$this->to_array_costumerinfo();
         $array_content = array_merge($payment,$costumerinfo);
         $array_content["customValues"] = $customvalues;
         $json_content = json_encode($array_content);
@@ -119,14 +115,12 @@ class NewPay
         return $array;
     }
 
-    public function payout_interactive($orderid, $price, $customvalues = array())
+    public function payout_interactive($orderid, $price,$costumerinfo, $customvalues = array())
     {
         $payment = $this->gen_payout($orderid, $price);
-        $costumerinfo=$this->to_array_costumerinfo();
         $array_content = array_merge($payment,$costumerinfo) ;
         $array_content["customValues"] = $customvalues;
         $json_content = json_encode($array_content);
-        print_r($json_content);
         $url_transaction = $this->base_url . "api/transactions";
         $ch = curl_init($url_transaction);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json_content);
@@ -144,9 +138,8 @@ class NewPay
     }
 
 
-    public function new_card_binding()
+    public function new_card_binding($costumerinfo)
     {
-        $costumerinfo=$this->to_array_costumerinfo();
         $json_content = json_encode($costumerinfo);
         $url_transaction = $this->base_url . "api/card-bindings";
         $ch = curl_init($url_transaction);
@@ -166,21 +159,20 @@ class NewPay
 
     //generate array  to pay transaction on card
 
-    private function gen_array_know_transaction($payment, $knowcardnumber)
+    private function gen_array_know_transaction($payment,$costumerinfo, $knowcardnumber)
     {
       //  $mail=CustomerInfo::$mail;
         $payment["payment"]["action"] = "payout";
-        $costumerinfo=$this->to_array_costumerinfo();
         $array = array_merge($payment,$costumerinfo);
         $array["target"]["knownCardNumber"] = $knowcardnumber;
         return ($array);
 
     }
 
-    public function payout_to_known_card($orderid, $price, $knowcardnumber)
+    public function payout_to_known_card($orderid, $price,$costumerinfo, $knowcardnumber)
     {
         $payout = $this->gen_payment($orderid, $price);
-        $payout = $this->gen_array_know_transaction($payout, $knowcardnumber);
+        $payout = $this->gen_array_know_transaction($payout,$costumerinfo, $knowcardnumber);
         $json_content = json_encode($payout);
         $url_transaction = $this->base_url . "api/transactions";
         $ch = curl_init($url_transaction);

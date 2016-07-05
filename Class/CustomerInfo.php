@@ -1,11 +1,6 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: Kage-Chan
- * Date: 04.07.2016
- * Time: 10:21
- */
+
 class CustomerInfo
 {
     public $email;
@@ -15,6 +10,6 @@ class CustomerInfo
         $this->email = $email;
         $this->phone = $phone;
     }
-    
+
 
 }
