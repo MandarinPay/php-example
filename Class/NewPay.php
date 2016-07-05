@@ -1,11 +1,6 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: Kage-Chan
- * Date: 02.07.2016
- * Time: 12:38
- */
+
 class NewPay
 {
     public $custumerinfo;
@@ -88,6 +83,7 @@ class NewPay
     public function pay_interactive($orderid, $price,$costumerinfo, $customvalues = array())
     {
         $payment = $this->gen_payment($orderid, $price);
+        $costumerinfo=$this->to_array_costumerinfo($costumerinfo);
         $array_content = array_merge($payment,$costumerinfo);
         $array_content["customValues"] = $customvalues;
         $json_content = json_encode($array_content);
@@ -118,6 +114,7 @@ class NewPay
     public function payout_interactive($orderid, $price,$costumerinfo, $customvalues = array())
     {
         $payment = $this->gen_payout($orderid, $price);
+        $costumerinfo=$this->to_array_costumerinfo($costumerinfo);
         $array_content = array_merge($payment,$costumerinfo) ;
         $array_content["customValues"] = $customvalues;
         $json_content = json_encode($array_content);
@@ -140,6 +137,7 @@ class NewPay
 
     public function new_card_binding($costumerinfo)
     {
+        $costumerinfo=$this->to_array_costumerinfo($costumerinfo);
         $json_content = json_encode($costumerinfo);
         $url_transaction = $this->base_url . "api/card-bindings";
         $ch = curl_init($url_transaction);
@@ -172,6 +170,7 @@ class NewPay
     public function payout_to_known_card($orderid, $price,$costumerinfo, $knowcardnumber)
     {
         $payout = $this->gen_payment($orderid, $price);
+        $costumerinfo=$this->to_array_costumerinfo($costumerinfo);
         $payout = $this->gen_array_know_transaction($payout,$costumerinfo, $knowcardnumber);
         $json_content = json_encode($payout);
         $url_transaction = $this->base_url . "api/transactions";

@@ -2,9 +2,8 @@
 spl_autoload_register(function($class_name){
     require_once 'Class/'.$class_name.'.php';
 });
-$new_info = new CustomerInfo();
+$costumerinfo = new CustomerInfo();
 $new_user = new NewPay();
-$costumerinfo=$new_user->to_array_costumerinfo($new_info);
 $orderid=rand(1,500000000);
 $price=10;
 $action="pay";
