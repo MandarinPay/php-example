@@ -156,7 +156,6 @@ class NewPay
 
     private function gen_array_know_transaction($payment, $customerinfo, $knowcardnumber)
     {
-        echo "<br>";
         $payment["payment"]["action"] = "payout";
         $array = array_merge($customerinfo, $payment);
         $array["target"]["knownCardNumber"] = $knowcardnumber;
@@ -187,7 +186,6 @@ class NewPay
 
     private function gen_array_rebill_transaction($rebill_array, $rebill_id)
     {
-        echo "<br>";
         $rebill_array["target"]["rebill"] = $rebill_id;
         return ($rebill_array);
     }
@@ -197,7 +195,6 @@ class NewPay
         $rebill_array = $this->gen_payment($orderid, $price);
         $rebill_array = $this->gen_array_rebill_transaction($rebill_array, $rebill_id);
         $json_content = json_encode($rebill_array);
-        print_r($json_content);
         $url_transaction = $this->base_url . "api/transactions";
         $ch = curl_init($url_transaction);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json_content);

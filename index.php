@@ -17,10 +17,11 @@ $payment_url=$payment->userWebLink;
 //header("Location:{$payment}");
 
 //pauout_interactive
-$payment=$new_user->pay_interactive($orderid,$price,$costumerinfo);
-$payment_url=$payment->userWebLink;
-print_r($payment_url);
-//header("Location:{$payment}");
+$orderid=rand(1,500000000);
+$payout=$new_user->payout_interactive($orderid,$price,$costumerinfo);
+$payout_url=$payment->userWebLink;
+$payout_id=$payment->id;
+//header("Location:{$payout_url}");
 
 
 //card_binding
