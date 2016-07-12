@@ -1,0 +1,6 @@
+.table-bordered >thead>tr>th{
+    text-align: center;
+}
+.table-bordered tr td{
+    text-align: center;
+}

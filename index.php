@@ -1,55 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tutorial page </title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="./css/my.css"/>
+</head>
+<body>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Выбранная операция</th>
+        <th>mail</th>
+        <th>phone</th>
+        <th>price</th>
+        <th>ID in system or card_number_id</th>
+        <th>status</th>
+        <th>time operation</th>
+    </tr>
+    </thead>
 <?php
-spl_autoload_register(function($class_name){
-    require_once 'Class/'.$class_name.'.php';
+spl_autoload_register(function ($class_name) {
+    require_once 'Class/' . $class_name . '.php';
 });
-$costumerinfo = new CustomerInfo();
-$new_user = new NewPay();
-$orderid=rand(1,500000000);
-$price=10;
-$action="pay";
-$customer_mail="lox@mail.ru";
-$form=$new_user->generate_form($orderid,$price,$customer_mail);
 
-//unknow transactions
-$payment=$new_user->pay_interactive($orderid,$price,$costumerinfo);
-$payment_url=$payment->userWebLink;
-//echo "<br>";
-//print_r($payment_url);
-//header("Location:{$payment}");
+$new_index = new IndexForm('my_database');
+$array_data = $new_index->get_all_data();
+foreach ($array_data as $keys=> $values){
+    echo "<tr>";
+    foreach($values as $key => $value){
+        echo "<td>";
+        echo $value;
+        echo "</td>";
+    }
+    echo "</tr>";
+}
+echo "</table>";
+?>
 
-//pauout_interactive
-$orderid=rand(1,500000000);
-$payout=$new_user->payout_interactive($orderid,$price,$costumerinfo);
-$payout_url=$payment->userWebLink;
-$payout_id=$payment->id;
-//echo "<br>";
-//print_r($payout_id);
-//header("Location:{$payout_url}");
+    <a class="btn btn-lg btn-success"
+       href="#" data-toggle="modal"
+       data-target="#basicModal">Создать заказ</a>
+    <div class="modal fade" id="basicModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" type="button" data-dismiss="modal">x</button>
+                    <h4 class="modal-title" id="myModalLabel">Создать заказ</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="/form.php" method="post">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 form-control-label">Email</label>
+                            <div class="col-sm-10">
+                                <input type="email" name="email" class="form-control" id="inputEmail3" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputphone" class="col-sm-2 form-control-label">Phone</label>
+                            <div class="col-sm-10">
+                                <input type="tel" name="phone" class="form-control" id="inputphone" placeholder="Phone">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="price" class="col-sm-2 form-control-label">Price</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="price" class="form-control" id="price" placeholder="100000">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2">Выбор операции</label>
+                            <div class="col-sm-10">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="gridRadios" id="gridRadios0" value="option0" checked>
+                                        Оплата
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="gridRadios" id="gridRadios1" value="option1">
+                                        Выплата
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="gridRadios" id="gridRadios2" value="option2">
+                                        Привязка карты
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="gridRadios" id="gridRadios3" value="option3">
+                                        Оплата по привязаной карте
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="gridRadios" id="gridRadios4" value="option4">
+                                        Выплата по привязаной карте
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="gridRadios" id="gridRadios5" value="option5">
+                                        Повторная оплата(rebill)
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="gridRadios" class="card_value" id="gridRadios6"
+                                               value="option6">
+                                        Выплата по известному номеру карты
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row" id="cheks_but">
+                            <label for="CardNumber" class="col-sm-2 form-control-label">Card_num</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="CardNumber" class="form-control" id="CardNumber"
+                                       placeholder="345435345345345">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-secondary">Отпрввить</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
 
+    </div>
+</body>
 
-//card_binding
-$card_bindings=$new_user->new_card_binding($costumerinfo);
-$card_bindings_link=$card_bindings->userWebLink;
-$id_bindings=$card_bindings->id;
-//echo "<br>";
-//print_r($id_bindings);
-//header("Location:{$card_bindings_link}");
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
 
-
-//know transactions
-$orderid=rand(1,500000000);
-$knowcardnumber="4929509947106878";
-$know_transactions=$new_user->payout_to_known_card($orderid,$price,$costumerinfo,$knowcardnumber);
-$know_transactions_id=$know_transactions->id;
-//echo "<br>";
-//print_r($know_transactions_id);
-//transaction rebill know card number
-
-
-//rebill
-$orderid=rand(1,5000);
-$rebill="$know_transactions_id";
-$rebill_transactions=$new_user->rebill_transaction($orderid,$price,$rebill);
-$rebill_transactions_id=$rebill_transactions->id;
-//echo "<br>";
-//print_r($rebill_transactions);
+<script>
+    $(document).ready(function () {
+        var cheksBut = $('#cheks_but');
+        var radios = $('[name="gridRadios"]');
+        var radio = $('.card_value');
+        cheksBut.hide();
+        radios.on('click', function () {
+            if (radio.is(':checked')) {
+                cheksBut.show();
+            } else {
+                cheksBut.hide();
+            }
+        });
+    });
+</script>
+</html>
