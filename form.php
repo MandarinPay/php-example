@@ -19,7 +19,7 @@ $new_user = new NewPay();
 $new_index->create_data_value($array_form, $option_select_num);
 $orderid = $new_index->get_order_id();
 $price = $array_form['price'];
-  
+
 
 switch ($option_select_num) {
     case 0:
@@ -32,15 +32,15 @@ switch ($option_select_num) {
         $operation = $new_user->new_card_binding($costumerinfo);
         break;
     case 3:
-        $id_card = $new_index->get_id_card($array_form,$orderId);
+        $id_card = $new_index->get_id_card($array_form);
         $operation = $new_user->pay_from_card_binding($orderid, $price, $id_card);
         break;
     case 4:
-        $id_card = $new_index->get_id_card($array_form,$orderId);
+        $id_card = $new_index->get_id_card($array_form);
         $operation = $new_user->payout_from_card_binding($orderid, $price, $id_card);
         break;
     case 5:
-        $id_card = $new_index->get_id_card($array_form,$orderId);
+        $id_card = $new_index->get_id_card_sucsess_pay($array_form);
         $operation = $new_user->rebill_transaction($orderid, $price, $id_card);
         break;
     case 6:

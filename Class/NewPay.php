@@ -179,6 +179,7 @@ class NewPay
         return $result;
 
     }
+
     public function payout_from_card_binding($orderid, $price, $id_card_number)
     {
         $payout = $this->gen_payment($orderid, $price);
@@ -261,6 +262,22 @@ class NewPay
         $result = json_decode($result);
         return $result;
 
+
+    }
+
+    public function check_sign($req)
+    {
+        $sign = $req['sign'];
+        unset($req['sign']);
+        $to_hash = '';
+        if (!is_null($req) && is_array($req)) {
+            ksort($req);
+            $to_hash = implode('-', $req);
+        }
+
+        $to_hash = $to_hash . '-' . $this->secret;
+        $calculated_sign = hash('sha256', $to_hash);
+        return $calculated_sign == $sign;
     }
 
 

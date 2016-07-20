@@ -10,32 +10,34 @@ class IndexForm
 {
     public $table_name;
 
-    public function __construct($table_name)
+    public function __construct($table_name = 'mandarin_modul_api')
     {
         $this->table_name = $table_name;
         $this->table = new PDO("sqlite:{$table_name}.sqlite3");
         $this->options = ["option0" => "Оплата",
             "option1" => "Выплата",
-            "option2" => "Привязка карты",
+            "option2" => "Привязка новой карты",
             "option3" => "Оплата по привязаной карте",
             "option4" => "Выплата по привязаной карте",
             "option5" => "Повторная оплата",
             "option6" => "Выплата по номеру карты"];
     }
 
-
     public function create_and_open_table()
     {
 
+
         $this->table->setAttribute(PDO::ATTR_ERRMODE,
             PDO::ERRMODE_EXCEPTION);
+
+
 // Set errormode to exceptions
-        $this->table->exec("CREATE TABLE IF NOT EXISTS my_database(
+        $this->table->exec("CREATE TABLE IF NOT EXISTS $this->table_name(
                               id INTEGER PRIMARY KEY AUTOINCREMENT, 
                               /* id автоматически станет автоинкрементным */ 
                                select_option TEXT,
                                mail TEXT,
-                               phone INT,
+                               phone TEXT,
                                price INT,
                                idsystem_and_card_id TEXT,
                                card_number INT,
@@ -112,23 +114,53 @@ class IndexForm
         };
     }
 
-    public function get_id_card($array_form, $orderid)
+    public function get_id_card($array_form)
     {
         $option = $this->options["option2"];
         $mail = $array_form['email'];
-        $phone = $array_form[':phone'];
-        $status = "Complite";
-        $sql = "SELECT 'idsystem_and_card_id' FROM $this->table_name WHERE 'select option' =:select_options AND mail =:mail AND phone =:phone AND status =:status  ";
-        $stmt = $this->table->prepare($sql);
-        $stmt->bindParam(':mail', $mail);
-        $stmt->bindParam(':select_options', $option);
-        $stmt->bindParam(':phone', $phone);
-        $stmt->bindParam(':status', $status);
-        $id_card = $stmt->fetchColumn();
+        $phone = $array_form['phone'];
+        $status = "success";
+        $sql = $this->table->prepare("SELECT idsystem_and_card_id FROM my_database 
+                                    WHERE select_option =:select_options
+                                    AND mail = :mail
+                                    AND phone = :phone
+                                    AND  status = :status");
+        $sql->bindParam(':mail', $mail);
+        $sql->bindParam(':select_options', $option);
+        $sql->bindParam(':phone', $phone);
+        $sql->bindParam(':status', $status);
+        $sql->execute();
+        $id_card = $sql->fetchColumn();
         if (empty($id_card)) {
             echo("Вы еще не привязали карту или она не прошла поддтверждение!!!!</br>");
             echo "<a href =\"/\">На главную</a>";
-            $this->delete_row($orderid);
+            $this->delete_row();
+
+            exit();
+        } else {
+            return $id_card;
+        }
+    }  public function get_id_card_sucsess_pay($array_form)
+    {
+        $option = $this->options["option3"];
+        $mail = $array_form['email'];
+        $phone = $array_form['phone'];
+        $status = "success";
+        $sql = $this->table->prepare("SELECT idsystem_and_card_id FROM my_database 
+                                    WHERE select_option =:select_options
+                                    AND mail = :mail
+                                    AND phone = :phone
+                                    AND  status = :status");
+        $sql->bindParam(':mail', $mail);
+        $sql->bindParam(':select_options', $option);
+        $sql->bindParam(':phone', $phone);
+        $sql->bindParam(':status', $status);
+        $sql->execute();
+        $id_card = $sql->fetchColumn();
+        if (empty($id_card)) {
+            echo("Вы еще не пользовались картой!!!!</br>");
+            echo "<a href =\"/\">На главную</a>";
+            $this->delete_row();
 
             exit();
         } else {
@@ -142,11 +174,22 @@ class IndexForm
         return ($stmt);
     }
 
-    private function delete_row($orderid)
+    private function delete_row()
     {
-        $sql = "DELETE FROM $this->table_name WHERE id =  :id";
+        $sql = "DELETE FROM $this->table_name WHERE id = :id";
         $stmt = $this->table->prepare($sql);
-        $stmt->bindParam(':id', $orderid);
+        $stmt->bindParam(':id', $this->table->lastInsertId());
+        $stmt->execute();
+    }
+
+    public function updtade_status($array)
+    {
+        $status = $array['status'];
+        $card_binding_transaction = !empty($array['transaction']) ? $array['transaction'] : $array['card_binding'];
+        $sql = "UPDATE {$this->table_name} SET status=:status WHERE  idsystem_and_card_id=:card_bind_transaction";
+        $stmt = $this->table->prepare($sql);
+        $stmt->bindParam(':card_bind_transaction', $card_binding_transaction);
+        $stmt->bindParam(':status', $status);
         $stmt->execute();
     }
 }
