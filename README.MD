@@ -1,5 +1,6 @@
 # Доккументация 
 
+## Введение <a id="Enter"></a>
 Класс предназначент для работы с инфошлюзом банка [mandarin](http://mandarinpay.com/) и способен выполнять следующие функции:
 
     - Эмиссия карты 
@@ -19,6 +20,7 @@
 
 Теперь подробнее о логике файла и о доступных методах,  рассмотрим как пример  файл вызова form.php
 
+#### Подключение классов <a id="class_get"></a>
 Для начала мы подключаем наши классы из папки Class:
 ```
 spl_autoload_register(function ($class_name) {
@@ -26,7 +28,7 @@ spl_autoload_register(function ($class_name) {
 });
 
 ```
-
+#### Проверка данных <a id="protect_site"></a>
 Первым делом что я делаю, это проверяю входные данные на спец символы  функцией:
 ```
 $array_in_form = defender_site($_POST);
@@ -50,7 +52,7 @@ function defender_site($array_post)
 Класс отвечающий за данные  передаваемые пользователем: 
 
 
-#### **Пример вызова и создание экземпляра класса**
+#### **Пример вызова и создание экземпляра класса**<a id="class_get"></a>
 
 ```
 $person = new Person($array_in_form['family'], $array_in_form['name'], $array_in_form['patronymic'],
@@ -58,9 +60,9 @@ $person = new Person($array_in_form['family'], $array_in_form['name'], $array_in
     $array_in_form['input_docseria'], $array_in_form['input_docnum']);
 ```
 
+#### Передаваемые параметры <a id="enter_param_person_exemple"></a>
 Подробнее о том что передаем и да **ЭТО ВСЕ ОБЯЗАТЕЛЬНЫЕ ПОЛЯ** если не передать то или иное значение класс просто сломается.
 Подробнее  о каждм параметре.
-
 
 
 * 1ый параметр  является Фамилия Человека
@@ -78,7 +80,7 @@ $person = new Person($array_in_form['family'], $array_in_form['name'], $array_in
 
 #### Методы нужные для отладки в этом классе **Не рекомендуется использовать их в  рабочем проекте  как самостоятельные**
 
-##### метод **prepare_identification_user**
+##### метод **prepare_identification_user** <a id="prepare_identefication"></a>
 
 ```
 $person->prepare_identification_user($snils)
@@ -108,7 +110,7 @@ Array
 ```
 Напоминаю используйте данный метод лишь для того чтобы посмотреть то , что бы посмотреть сформированный масив и данные которые вы передали 
 
-#### метод **prepare_user_emission**
+#### метод **prepare_user_emission** <a id = "preapare_user_emission"></a>
 
 ```
 $person->prepare_user_emission($sex, $birthday, $birthplace, $mail, $docissuingdate, $docissuer, $docissuercode, $rawaddress, $numcard, $passphrase)
@@ -157,11 +159,11 @@ Array
 
 Больше доступных методов у данного класса нету.
 
-## Class Identification 
+## Class Identification <a id="Class_identefication"></a>
 
 Основной класс по работе с инфошлюзом постараюсь расписать о нем максимально подробно
 
-#### **создание экземпляра класса**
+#### **создание экземпляра класса** <a id="exemple_class_identefication"></a>
 
 ```
 $new_identification = new Identification();
@@ -171,6 +173,7 @@ $new_identification = new Identification();
 ```
 $new_identification = new Identification('NbtjifAADi','000008-0001-0001','testing');
 ```
+#### Передаваемые параметры <a id="enter_param_identefication_exemple"</a>
 Подробнее о каждом из параметров:
 
 * 1ый параметр  - это secret который знаете вы и он вам выдается системой.
@@ -185,7 +188,7 @@ $new_identification = new Identification();
 ```
 **Дефолтными параметрами являются параметры приведенные в примере выше**  это является  оптимальным быстрым стартом для быстрой отладки  вашего проекта
  
-#### метод **emission_new_card**
+#### метод **emission_new_card**<a id="method_emission_card"></a>
 
 пример вызова:
 ```
@@ -265,7 +268,7 @@ Array
 
 Что дальше с ним делать , решать вам 
  
-#### метод **identification_user** 
+#### метод **identification_user** <a id="identification_user"></a>
 
 пример вызова.
 
@@ -293,7 +296,7 @@ Array
 
 В противном случае приложение выведет данные в которых была допущенна ошибка.
 
-#### метод **end_identification_user**
+#### метод **end_identification_user**<a id="end_identification_user"></a>
 
 пример вызова:
 ```
@@ -330,6 +333,7 @@ Array
 ```
 В противном случае приложение выведет данные в которых была допущенна ошибка.
 
+### Демо <a id="demo"></a>
 Демо пример  рабочего приложенния полностью настроенного для ознакомления:
 * в index.php - формы для отправки данных
 * в form.php  - логика  по взаимодействию с классом 
