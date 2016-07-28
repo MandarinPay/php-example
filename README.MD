@@ -108,7 +108,7 @@ Array
 ```
 Напоминаю используйте данный метод лишь для того чтобы посмотреть то , что бы посмотреть сформированный масив и данные которые вы передали 
 
-##### метод **prepare_user_emission**
+#### метод **prepare_user_emission**
 
 ```
 $person->prepare_user_emission($sex, $birthday, $birthplace, $mail, $docissuingdate, $docissuer, $docissuercode, $rawaddress, $numcard, $passphrase)
@@ -265,7 +265,7 @@ Array
 
 Что дальше с ним делать , решать вам 
  
-#### методо **identification_user** 
+#### метод **identification_user** 
 
 пример вызова.
 
