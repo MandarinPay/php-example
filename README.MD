@@ -45,12 +45,12 @@ function defender_site($array_post)
 
 Далее поговорим о классах и о том какие методы доступны
 
-## Class Person (#person_exemple)
+## Class Person
 
 Класс отвечающий за данные  передаваемые пользователем: 
 
 
-**** <a name="Person"></a>пример вызова и создание экземпляра класса
+****Пример вызова и создание экземпляра класса
 
 ```
 $person = new Person($array_in_form['family'], $array_in_form['name'], $array_in_form['patronymic'],
@@ -203,4 +203,4 @@ $new_identification = new Identification();
  ```
  Рассмотрим подробно каждый параметр который мы передаем:
  
- * 1ый параметр Экземпляр класса [Person](#person)(
+ * 1ый параметр Экземпляр класса [Class Person](#Class Person)(
