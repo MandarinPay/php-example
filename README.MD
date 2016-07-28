@@ -45,7 +45,7 @@ function defender_site($array_post)
 
 Далее поговорим о классах и о том какие методы доступны
 
-## Class Person
+## Class Person<a id="Person"></a>
 
 Класс отвечающий за данные  передаваемые пользователем: 
 
@@ -203,4 +203,4 @@ $new_identification = new Identification();
  ```
  Рассмотрим подробно каждый параметр который мы передаем:
  
- * 1ый параметр Экземпляр класса [Class Person](#Class Person)(
+ * 1ый параметр Экземпляр класса [Person](#Person)(
