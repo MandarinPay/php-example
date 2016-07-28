@@ -50,7 +50,7 @@ function defender_site($array_post)
 Класс отвечающий за данные  передаваемые пользователем: 
 
 
-**** <a name="Person">пример</a> вызова и создание экземпляра класса
+**** <a name="Person"></a>пример вызова и создание экземпляра класса
 
 ```
 $person = new Person($array_in_form['family'], $array_in_form['name'], $array_in_form['patronymic'],
