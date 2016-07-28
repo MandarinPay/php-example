@@ -185,7 +185,27 @@ $new_identification = new Identification();
 ```
 Дефолтными параметрами являются параметры приведенные в примере выше  это является  оптимальным быстрым стартом для быстрой отладки  вашего проекта
  
-##### метод **emission_new_card**
+#### метод **emission_new_card**
+
+пример вызова:
+```
+ try {
+            $emission_user = $new_identification->emission_new_card($person, $array_in_form['input_sex'],
+                $array_in_form['input_birthday'],
+                $array_in_form['input_birthplace'],
+                $array_in_form['input_mail'],
+                $array_in_form['input_docissuingdate'],
+                $array_in_form['input_docissuer'],
+                $array_in_form['input_docissuercode'],
+                $array_in_form['input_adress'],
+                $array_in_form['input_card_num'],
+                $array_in_form['input_secret']);
+        } catch (Exception $e) {
+            echo "<b>Ошибка в данных:</b>" . $e->getMessage(), "\n";
+            exit(1);
+        }
+```
+Блок обарачивается в Try Cath т.к  используются  исключения внутри класса
 
 Является самым большим методом в данном классе вызывается следующим образом
 ```
@@ -200,7 +220,7 @@ $new_identification = new Identification();
                 $array_in_form['input_card_num'],
                 $array_in_form['input_secret']);
                 
- ```
+```
  
  Рассмотрим подробно каждый параметр который мы передаем:
  
@@ -217,9 +237,8 @@ $new_identification = new Identification();
  * 11ый параметр Кодовое слово например: Шарик
  
  Результатом операции  будет Массив следующего вида: 
- ```
- 
- Array
+```
+Array
  (
      [code] => 1100
      [hash] => 14b8f22946e24405b8d352e3850ff845
@@ -241,19 +260,77 @@ $new_identification = new Identification();
      [date] => 2016-07-28T11:53:49+00:00
      [message] => OK
  )
+```
+Если будут какие-то ошибки  то они выведутся вам на экран 
+
+Что дальше с ним делать , решать вам 
  
- ```
- Что дальше с ним делать , решать вам 
- 
-##### методо identification_user 
+#### методо **identification_user** 
 
 пример вызова.
 
 ```
+    try {
+            $identification_user = $new_identification->identification_user($person, $array_in_form['input_snils']);
+        } catch (Exception $e) {
+            echo 'Ошибка в данных: ', $e->getMessage(), "\n";
+            exit(1);
 
-$identification_user = $new_identification->identification_user($person, $array_in_form['input_snils']);
+        }
 ```
+Блок обарачивается в Try Cath т.к  используются  исключения внутри класса
 
+передаваемые параметры:
 
+ * 1ый параметр Экземпляр класса [Person](#class-person)
+ * 2ой параметр SNILS пользователя
  
+ результатом данной операции будет число:
+```
+13579
+```
+при успешной операции.
+
+В противном случае приложение выведет данные в которых была допущенна ошибка.
+
+#### метод **end_identification_user**
+
+пример вызова:
+```
+  try {
+                $end_identification_user = $new_identification->end_identification_user($_POST['pin_code'], $_POST['request_id']);
+            } catch (Exception $e) {
+                echo 'Ошибка в данных: ', $e->getMessage(), "\n";
+                exit(1);
+            }
+```
+Блок обарачивается в Try Cath т.к  используются  исключения внутри класса
+
+передаваемые параметры:
+ 
+  * 1ый параметр 6-значный пин код который  пришел юзеру на телефон и введен в вашем приложени
+  * 2ой параметр request_id полученый из в начале идентефикации.
+
+Результат операции массив:
+```
+Array
+(
+    [date] => 2016-07-28T12:15:28+00:00
+    [reply] => Array
+        (
+            [passport_valid] => false/true
+            [person_valid] => false/true
+            [snils_valid] => false/true
+        )
+
+    [message] => OK
+    [code] => 1100
+    [request_id] => 13580
+)
+```
+В противном случае приложение выведет данные в которых была допущенна ошибка.
+
+Демо пример  рабочего приложенния полностью настроенного для ознакомления:
+* в index.php - формы для отправки данных
+* в form.php  - логика  по взаимодействию с классом 
  
