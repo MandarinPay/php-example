@@ -203,4 +203,4 @@ $new_identification = new Identification();
  ```
  Рассмотрим подробно каждый параметр который мы передаем:
  
- * 1ый параметр Экземпляр класса [Person](#Person)(
+ * 1ый параметр Экземпляр класса [Person](#class-person)(
