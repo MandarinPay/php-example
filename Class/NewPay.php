@@ -52,7 +52,7 @@ class NewPay
         $array_form_data["customValue1"] = $custumvalue;
         $array_form_data["customName1"] = $custumname;
         $sign = $this->calc_sign($array_form_data);
-        $form = $form . "<form action=\"{$this->base_url}.Pay\" method=\"POST\"> ";
+        $form = $form . "<form action=\"{$this->base_url}Pay\" method=\"POST\"> ";
         foreach ($array_form_data as $key => $val) {
             $form = $form . '<input type="hidden" name="' . $key . '" value="' . htmlspecialchars($val) . '"/>' . "\n";
         }
