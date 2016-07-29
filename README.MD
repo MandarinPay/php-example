@@ -1,3 +1,25 @@
+# Документация
+
+## Menu
+1. [Подключение классов](#connection-classes)
+2. [Класс CustomerInfo](#class-customerinfo)
+    * [Пример создания экземпляра класса](#an-example-of-a-call-and-the-creation-of-an-instance)
+3. [Класс NewPay](#class-newpay)
+    * [Пример создания экземпляра класса](#an-example-of-a-call-and-the-creation-of-an-instance-newpay)
+    * [Метод method generate_form](#method-generate_form)
+    * [Метод pay_interactive](#method-pay_interactive)
+    * [Метод payout_interactive](#method-payout_interactive)
+    * [Метод payout_interactive](#method-payout_interactive)
+    * [Метод new_card_binding](#method-new_card_binding)
+    * [Метод pay_from_card_binding](#method-pay_from_card_binding)
+    * [Метод payout_from_card_binding](#method-payout_from_card_binding)
+    * [Метод rebill_transaction](#method-rebill_transaction)
+    * [Метод payout_to_known_card](#method-payout_to_known_card)
+    * [Метод check_sign](#method-check_sign)
+6. [Файл callback.php](#file-callback)
+7. [Вспомогательный класс для form.php IndexForm](##class-indexform)
+5. [Демо](#demo)   
+
 
 Класс предназначен для работы с методами API банка [mandarin](https://secure.mandarinpay.com/docs/api-ru.html)
 Класс включает в себя следующие методы:
@@ -270,7 +292,7 @@ $operation = $new_user->payout_to_known_card($orderid, $price, $costumerinfo, $c
 $calc_sigh = $testform->check_sign($_POST);
 ```
 
-## Файл callback.php
+## File callback
 
 Служит для приема данных от API на ваш сервис.
 
@@ -292,7 +314,7 @@ if ($calc_sigh == true) {
 
 Подробнее о методах IndexForm ниже
 
-## Class IdexForm
+## Class IndexForm
 
 Вспомогательный класс не имеет отношение к работе с API нужен для обслуживания, и удобной работы примера использования основого класса.
 
