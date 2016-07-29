@@ -9,7 +9,6 @@
     * [Метод method generate_form](#method-generate_form)
     * [Метод pay_interactive](#method-pay_interactive)
     * [Метод payout_interactive](#method-payout_interactive)
-    * [Метод payout_interactive](#method-payout_interactive)
     * [Метод new_card_binding](#method-new_card_binding)
     * [Метод pay_from_card_binding](#method-pay_from_card_binding)
     * [Метод payout_from_card_binding](#method-payout_from_card_binding)
@@ -17,7 +16,7 @@
     * [Метод payout_to_known_card](#method-payout_to_known_card)
     * [Метод check_sign](#method-check_sign)
 6. [Файл callback.php](#file-callback)
-7. [Вспомогательный класс для form.php IndexForm](##class-indexform)
+7. [Вспомогательный класс для form.php IndexForm](#class-indexform)
 5. [Демо](#demo)   
 
 
